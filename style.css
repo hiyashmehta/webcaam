@@ -9,6 +9,7 @@ body {
 .video-cont {
     height: 100vh;
     width: 100vw;
+    background-color: black;
 }
 video {
     width: 100%;
