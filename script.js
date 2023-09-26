@@ -29,12 +29,22 @@ navigator.mediaDevices.getUserMedia(constraints)
     recorder.addEventListener("click", (e) => {
         // Conversion of media chunks data to video
         let blob = new Blob(chunks, { type: "video/mp4" });
-        let videoURL = URL.createObjectURL(blob);
 
-        let a = document.createElement("a");
-        a.href = videoURL;
-        a.download = "stream.mp4";
-        a.click();
+        if (db) {
+            let videoID = shortid();
+            let dbTransaction = db.transaction("video", "readwrite");
+            let videoStore = dbTransaction.objectStore("video");
+            let videoEntry = {
+                id: `vid-${videoID}`,
+                blobData: blob
+            }
+            videoStore.add(videoEntry);
+        }
+
+       // let a = document.createElement("a");
+       // a.href = videoURL;
+       // a.download = "stream.mp4";
+       // a.click();
     })
 })
 
@@ -68,10 +78,21 @@ captureBtnCont.addEventListener("click", (e) => {
 
     let imageURL = canvas.toDataURL("image/jpg");
 
-    let a = document.createElement("a");
-    a.href = imageURL;
-    a.download = "image.jpg";
-    a.click();
+    if (db) {
+        let imageID = shortid();
+        let dbTransaction = db.transaction("image", "readwrite");
+        let imageStore = dbTransaction.objectStore("image");
+        let imageEntry = {
+            id: `img-${imageID}`,
+            url: imageURL
+        }
+        imageStore.add(imageEntry);
+    }
+
+    //let a = document.createElement("a");
+    //a.href = imageURL;
+    //a.download = "image.jpg";
+    //a.click();
 })
 
 let timerID;
