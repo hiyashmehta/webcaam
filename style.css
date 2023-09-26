@@ -1,4 +1,4 @@
-*{
+* {
     box-sizing: border-box;
 }
 body {
@@ -16,20 +16,20 @@ video {
     height: 100%;
 }
 
-.actions-cont {
+.action-cont {
     height: 12rem;
     width: 5rem;
-    /*background-color: lightblue;*/
+    /* background-color: lightblue; */
     position: absolute;
     top: calc( ( 100vh - 12rem ) / 2 );
-    right: 5rem;;
+    right: 5rem;
     color: white;
     display: flex;
     flex-direction: column;
     justify-content: space-between;
     z-index: 2;
 }
-.actions-cont > * {
+.action-cont > * {
     width: 100%;
     height: 5rem;
     border-radius: 50%;
@@ -54,12 +54,12 @@ video {
 .scale-record {
     animation-name: scale-record;
     animation-iteration-count: infinite;
-    animation-delay: 1s;
+    animation-duration: 1s;
 }
 .scale-capture {
     animation-name: scale-capture;
     animation-iteration-count: 1;
-    animation-delay: 1s;
+    animation-duration: 1s;
 }
 
 @keyframes scale-record {
@@ -67,7 +67,7 @@ video {
         transform: scale(0.8);
     }
     100% {
-        transform: scale(1.1);
+        transform: scale(1.1)
     }
 }
 @keyframes scale-capture {
@@ -75,7 +75,7 @@ video {
         transform: scale(0.8);
     }
     100% {
-        transform: scale(1.1);
+        transform: scale(1.1)
     }
 }
 
@@ -92,7 +92,7 @@ video {
 
 .filter-cont {
     position: absolute;
-    top: calc( ( 100vh - 16rem ) / 2 );
+    top: calc( (100vh - 16rem ) / 2 );
     left: 5rem;
     height: 16rem;
     width: 5rem;
@@ -135,7 +135,6 @@ video {
     color: white;
     font-size: 3rem;
 }
-
 .gallery {
     position: absolute;
     right: 6rem;

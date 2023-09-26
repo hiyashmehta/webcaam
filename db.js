@@ -1,8 +1,8 @@
-// Open Database
-// Create Objectstore
+// Open a database
+// Create objectstore
 // Make transactions
 let db;
-let openRequest = indexedDB.open("myDataBase", 1);
+let openRequest = indexedDB.open("myDataBase");
 openRequest.addEventListener("success", (e) => {
     console.log("DB Success");
     db = openRequest.result;
@@ -16,5 +16,4 @@ openRequest.addEventListener("upgradeneeded", (e) => {
 
     db.createObjectStore("video", { keyPath: "id" });
     db.createObjectStore("image", { keyPath: "id" });
-
 })

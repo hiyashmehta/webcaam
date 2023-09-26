@@ -14,39 +14,39 @@ let constraints = {
     audio: true
 }
 
-// navigator -> global browser info
+// navigator -> global, browser info
 navigator.mediaDevices.getUserMedia(constraints)
-.then((stream) => {
-    video.srcObject = stream;
+    .then((stream) => {
+        video.srcObject = stream;
 
-    recorder = new MediaRecorder(stream);
-    recorder.addEventListener("start", (e) => {
-        chunks = [];
-    })
-    recorder.addEventListener("dataavailable", (e) => {
-        chunks.push(e.data);
-    })
-    recorder.addEventListener("click", (e) => {
-        // Conversion of media chunks data to video
-        let blob = new Blob(chunks, { type: "video/mp4" });
+        recorder = new MediaRecorder(stream);
+        recorder.addEventListener("start", (e) => {
+            chunks = [];
+        })
+        recorder.addEventListener("dataavailable", (e) => {
+            chunks.push(e.data);
+        })
+        recorder.addEventListener("stop", (e) => {
+            // Conversion of media chunks data to video
+            let blob = new Blob(chunks, { type: "video/mp4" });
 
-        if (db) {
-            let videoID = shortid();
-            let dbTransaction = db.transaction("video", "readwrite");
-            let videoStore = dbTransaction.objectStore("video");
-            let videoEntry = {
-                id: `vid-${videoID}`,
-                blobData: blob
+            if (db) {
+                let videoID = shortid();
+                let dbTransaction = db.transaction("video", "readwrite");
+                let videoStore = dbTransaction.objectStore("video");
+                let videoEntry = {
+                    id: `vid-${videoID}`,
+                    blobData: blob
+                }
+                videoStore.add(videoEntry);
             }
-            videoStore.add(videoEntry);
-        }
 
-       // let a = document.createElement("a");
-       // a.href = videoURL;
-       // a.download = "stream.mp4";
-       // a.click();
+            // let a = document.createElement("a");
+            // a.href = videoURL;
+            // a.download = "stream.mp4";
+            // a.click();
+        })
     })
-})
 
 recordBtnCont.addEventListener("click", (e) => {
     if (!recorder) return;
@@ -66,17 +66,19 @@ recordBtnCont.addEventListener("click", (e) => {
 })
 
 captureBtnCont.addEventListener("click", (e) => {
+    captureBtn.classList.add("scale-capture");
+
     let canvas = document.createElement("canvas");
     canvas.width = video.videoWidth;
     canvas.height = video.videoHeight;
 
     let tool = canvas.getContext("2d");
     tool.drawImage(video, 0, 0, canvas.width, canvas.height);
-    // filtering
+    // Filtering 
     tool.fillStyle = transparentColor;
     tool.fillRect(0, 0, canvas.width, canvas.height);
 
-    let imageURL = canvas.toDataURL("image/jpg");
+    let imageURL = canvas.toDataURL();
 
     if (db) {
         let imageID = shortid();
@@ -89,10 +91,9 @@ captureBtnCont.addEventListener("click", (e) => {
         imageStore.add(imageEntry);
     }
 
-    //let a = document.createElement("a");
-    //a.href = imageURL;
-    //a.download = "image.jpg";
-    //a.click();
+    setTimeout(() => {
+        captureBtn.classList.remove("scale-capture");
+    }, 500)
 })
 
 let timerID;
@@ -104,10 +105,10 @@ function startTimer() {
         let totalSeconds = counter;
 
         let hours = Number.parseInt(totalSeconds / 3600);
-        totalSeconds = totalSeconds % 3600; // Remaining seconds
+        totalSeconds = totalSeconds % 3600; // remaining value
 
         let minutes = Number.parseInt(totalSeconds / 60);
-        totalSeconds = totalSeconds % 60; // Remaining seconds
+        totalSeconds = totalSeconds % 60; // remaining value
 
         let seconds = totalSeconds;
 
@@ -119,6 +120,7 @@ function startTimer() {
 
         counter++;
     }
+
     timerID = setInterval(displayTimer, 1000);
 }
 function stopTimer() {
@@ -128,8 +130,7 @@ function stopTimer() {
 }
 
 
-
-// Filtering Logic
+// Filtering logic
 let filterLayer = document.querySelector(".filter-layer");
 let allFilters = document.querySelectorAll(".filter");
 allFilters.forEach((filterElem) => {
